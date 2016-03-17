@@ -10,15 +10,15 @@ field_all <- c('id', # DOI
                'author',
                'author_affiliate',
                'author_notes', # Contributions
-               'subject')
+               'competing_interest')
 
 field_psych <- c('id', # DOI
                       'journal', # Only PLOS ONE if all went well
                       'author',
                       'author_affiliate',
                       'author_notes', # Contributions
-                      'subject',
-                      'everything')
+                      'everything',
+                      'competing_interest')
 
 # set searchterms
 search_all <- '(doc_type:full) AND (article_type:"Research Article")'
@@ -26,12 +26,16 @@ search_psych <- '(doc_type:full) AND (article_type:"Research Article") AND (subj
 
 # Search and write out
 all_hits <- searchplos(q = search_all, fl = field_all, limit = 1)$meta$numFound
-all_res <- searchplos(q = search_all, fl = field_all, limit = 20)$data
-# all_res <- searchplos(q = search_all, fl = field_all, limit = all_hits)
+# all_res <- searchplos(q = search_all, fl = field_all, limit = 20)$data
+all_res <- searchplos(q = search_all, fl = field_all, limit = all_hits)
 
 psych_hits <- searchplos(q = search_psych, fl = field_psych, limit = 1)$meta$numFound
-psych_res <- searchplos(q = search_psych, fl = field_psych, limit = 20)$data
-# psych_res <- searchplos(q = search_psych, fl = field_psych, limit = psych_hits)
+# psych_res <- searchplos(q = search_psych, fl = field_psych, limit = 20)$data
+psych_res <- searchplos(q = search_psych, fl = field_psych, limit = psych_hits)
+
+# save the full-text separately
+# iterate through hits.
+
 
 write.csv(all_res, quote = TRUE, 
           file = sprintf('data/%s_all_res.csv', format(Sys.time(),
