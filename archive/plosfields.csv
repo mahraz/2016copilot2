@@ -1,0 +1,73 @@
+field,description,note
+abstract,Abstract section,no note
+abstract_ngram,NA,NA
+abstract_primary_display,Abstract section,For display purposes only. Primary abstract only
+accepted_date,Accepted Date,Requires start and end date
+affiliate,Affiliate,Can have multiple values
+affiliate_facet,NA,NA
+alternate_title,Alternative Title,no note
+article_type,Article Type,no note
+article_type_facet,NA,NA
+author,Author,Can have multiple values
+author_affiliate,NA,NA
+author_collab_only_display,Author,For display purposes only. Collaborative authors only
+author_display,Author,For display purposes only
+author_facet,NA,NA
+author_notes,Author Notes,no note
+author_without_collab_display,Author,For display purposes only. All the authors except for collaborative authors
+body,Most sections of the article,Without Abstract or References
+body_ngram,NA,NA
+body_rev,NA,NA
+competing_interest,Competing Interest Statement,no note
+conclusions,Conclusions section,no note
+copyright,copyright-statement,copyright information
+counter_total_all,"Total views, all time",no note
+counter_total_month,"Total views, last 30 days",no note
+cross_published_journal_eissn,no description,PLoS-specific indexes for articles that appear in multiple journals
+cross_published_journal_key,Cross Published Journal Key,PLoS-specific indexes for articles that appear in multiple journals
+cross_published_journal_name,Cross Published Journal Name,PLoS-specific indexes for articles that appear in multiple journals
+doc_partial_body,NA,NA
+doc_partial_parent_id,NA,NA
+doc_partial_type,NA,NA
+doc_type,NA,NA
+editor,Editor,Can have multiple values
+editor_affiliate,NA,NA
+editor_display,Editor,For display purposes only.
+editor_facet,NA,NA
+eissn,electronic ISSN,no note
+elocation_id,Electronic Location,Used by Pub Med Central
+everything,All text in the article,Includes Meta information
+everything_ngram,NA,NA
+everything_noprocess,NA,NA
+everything_rev,NA,NA
+figure_table_caption,NA,NA
+financial_disclosure,Financial Disclosure Statement,no note
+id,DOI (Digital Object Identifier),Extended for partial documents
+introduction,Introduction section,no note
+issue,Issue,no note
+journal,Full Journal Name,no note
+journal_id_nlm_ta,Journal ID at NLM,Used by the National Library of Medicine
+journal_id_pmc,Journal ID at PMC,Used by Pub Med Central
+journal_id_publisher,Publisher of this Journal,Short identifier
+materials_and_methods,Materials and Methods section,no note
+pagecount,Total number of pages,Not all articles have page count
+pissn,print ISSN,no note
+publication_date,Publication Date,Requires start and end date
+publisher,Publisher of this Article,Full name
+received_date,Received Date,Requires start and end date
+reference,Reference section,Can have multiple values
+results_and_discussion,Results and discussion section,no note
+subject,Subject Category,Can have multiple values
+subject_facet,NA,NA
+subject_hierarchy,NA,NA
+subject_level_1,Subject Category,Can have multiple values. Contains only the top level subjects.
+subject2,NA,NA
+subject2_facet,NA,NA
+subject2_hierarchy,NA,NA
+subject2_level_1,NA,NA
+supporting_information,Supporting Information section,no note
+timestamp,Time of last index,no note
+title,Article Title,no note
+title_display,Article Title,For display purposes only
+title_ngram,NA,NA
+volume,Volume,no note
