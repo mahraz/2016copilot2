@@ -1,5 +1,9 @@
-# Transparent project management template
+# Co-pilot 2.0: Collaboration on statistical analyses and statistical reporting errors in psychological science – revisited
 
-This project includes a folder structure to manage your research project. Each folder contains a readme file which provides a general idea of what to include. The `contributions.csv` file can be used to specify contributions in the research project. Note that this template is geared towards empirical projects.
+## Coosje L. S. Veldkamp, Chris H. J. Hartgerink, Marcel A. L.M. van Assen, Jelte M. Wicherts 
 
-Additionally, not all projects require all parts of this template. The template is meant as a pruning template, where it is duplicated and subsequently adjusted to one's own needs. It is merely here to provide a framework to build on.
+This project is a continuation of 
+
+Veldkamp, C. L. S., Nuijten, M. B., Dominguez-Alvarez, L., van Assen, M. A. L. M., & Wicherts, J. M. (2014). Statistical reporting errors and collaboration on statistical analyses in psychological science. PloS One, 9(12), e114876.
+
+in which we move from survey methods to data from journals. In the PLOS family of journals, contributions are reported by default, so we use these to replicate the referred paper and extend it.
