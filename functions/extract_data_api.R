@@ -38,7 +38,8 @@ field_psych <- c('id', # DOI
 
 # set searchterms
 search_all <- '(doc_type:full) AND (article_type:"Research Article")'
-search_psych <- '(doc_type:full) AND (article_type:"Research Article") AND (subject:psychology) AND (cross_published_journal_key:PLoSONE)'
+# search_psych <- '(doc_type:full) AND (article_type:"Research Article") AND (subject:psychology) AND (cross_published_journal_key:PLoSONE)'
+search_psych <- '(doc_type:full) AND (article_type:"Research Article") AND (subject:psychology)'
 
 # Get number of hits
 all_hits <- searchplos(q = search_all, fl = field_all, limit = 1)$meta$numFound
@@ -57,8 +58,8 @@ for (iter in 1:5){
   res$id <- gsub('/', '_', res$id)
   
   # Retain only year of publication_date
-  res$publication_date <- substr(res$publication_date, 0, 4)
-  if (!is.null(res_statcheck)) res_statcheck$publication_date <- res$publication_date
+  res$publication_year <- substr(res$publication_date, 0, 4)
+  res$publication_month <- substr(res$publication_date, 6, 7)
   
   # First author
   res$first_author <- str_split(res$author, '; ')[[1]][1]
@@ -68,7 +69,6 @@ for (iter in 1:5){
         simpleCap(res$first_author),
         '[A-Z]')),
     collapse = '')
-  if(!is.null(res_statcheck)) res_statcheck$first_author <- res$first_author
   
   # Get all author initials
   temp <- str_extract_all(simpleCap(str_split(res$author, '; ')[[1]]), '[A-Z]')
@@ -84,7 +84,6 @@ for (iter in 1:5){
   # use ! to make false indicate NO competing interest
   res$competing_interest_boolean <- !grepl(res$competing_interest,
                                            pattern = 'no competing interest')
-  if (!is.null(res_statcheck)) res_statcheck$competing_interest_boolean <- res$competing_interest_boolean
   
   # Split up contributions
   contributions <- str_split(res$author_notes, '\\. ')[[1]]
@@ -112,7 +111,6 @@ for (iter in 1:5){
       contributions[id_analyzed], ': ')[[1]][2], ' ')[[1]]
   analyzed <- gsub(analyzed, pattern = '\\.', replacement = '')
   res$nr_analyzed <- length(analyzed)
-  if (!is.null(res_statcheck)) res_statcheck$nr_analyzed <- length(analyzed)
   
   # Extract 'Wrote the paper'
   id_wrote <- grepl('wrote', contributions, ignore.case = TRUE)
@@ -160,7 +158,7 @@ for (iter in 1:5){
                              abbreviated_author[j])
       }
       
-      if ((conc + perf + anal + wrot) > 0) author[j] <- TRUE
+      if ((conc + perf + anal + wrot) > 0) author[j] <- TRUE else author[j] <- FALSE
     }
   }
   
@@ -230,8 +228,10 @@ for (iter in 1:5){
                                sum(res_statcheck$DecisionError))
   
   # Retain only year of publication_date
-  res$publication_date <- substr(res$publication_date, 0, 4)
-  if (!is.null(res_statcheck)) res_statcheck$publication_date <- res$publication_date
+  res$publication_year <- substr(res$publication_date, 0, 4)
+  res$publication_month <- substr(res$publication_date, 6, 7)
+  if (!is.null(res_statcheck)) res_statcheck$publication_year <- res$publication_year
+  if (!is.null(res_statcheck)) res_statcheck$publication_month <- res$publication_month
   
   # First author
   res$first_author <- str_split(res$author, '; ')[[1]][1]
