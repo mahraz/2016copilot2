@@ -9,8 +9,8 @@ simpleCap <- function(x) {
   for (i in 1:length(x)){
     s <- strsplit(x[i], " ")[[1]]
     
-    res[i] <- paste(toupper(substring(s, 1,1)), substring(s, 2),
-                    sep="", collapse=" ")
+    res[i] <- paste(toupper(substring(s, 1, 1)), substring(s, 2),
+                    sep = "", collapse = " ")
   }
   return(res)
 }
@@ -88,84 +88,199 @@ for (iter in 1:5){
   # Split up contributions
   contributions <- str_split(res$author_notes, '\\. ')[[1]]
   
+  # Get initials for all contributions in a vector
+  separate <- unlist(str_split(contributions, ': '))
+  all_init <- separate[seq(2, length(separate), 2)]
+  all_init <- gsub(x = all_init, pattern = '\\.', replacement = '')
+  uniq_initials <- unique(unlist(str_split(all_init, pattern = ' ')))
+  
   # Extract "Conceived and Designed the experiments"
   id_conceived <- grepl('conceived', contributions, ignore.case = TRUE)
-  conceived <- str_split(
-    str_split(
-      contributions[id_conceived], ': ')[[1]][2], ' ')[[1]]
-  conceived <- gsub(conceived, pattern = '\\.', replacement = '')
-  res$nr_conceived <- length(conceived)
+  if (sum(id_conceived) == 0){
+    res$nr_conceived <- NA
+  } else {
+    conceived <- str_split(
+      str_split(
+        contributions[id_conceived], ': ')[[1]][2], ' ')[[1]]
+    conceived <- gsub(conceived, pattern = '\\.', replacement = '')
+    res$nr_conceived <- length(conceived)
+  }
   
   # Extract 'Performed the experiments'
   id_performed <- grepl('performed', contributions, ignore.case = TRUE)
-  performed <- str_split(
-    str_split(
-      contributions[id_performed], ': ')[[1]][2], ' ')[[1]]
-  performed <- gsub(performed, pattern = '\\.', replacement = '')
-  res$nr_performed <- length(performed)
+  if (sum(id_performed) == 0){
+    res$nr_performed <- NA
+  } else {
+    performed <- str_split(
+      str_split(
+        contributions[id_performed], ': ')[[1]][2], ' ')[[1]]
+    performed <- gsub(performed, pattern = '\\.', replacement = '')
+    res$nr_performed <- length(performed)
+  }
   
   # Extract 'Analyzed the data'
   id_analyzed <- grepl('analyzed', contributions, ignore.case = TRUE)
-  analyzed <- str_split(
-    str_split(
-      contributions[id_analyzed], ': ')[[1]][2], ' ')[[1]]
-  analyzed <- gsub(analyzed, pattern = '\\.', replacement = '')
-  res$nr_analyzed <- length(analyzed)
+  if (sum(id_analyzed) == 0){
+    res$nr_analyzed <- NA
+  } else {
+    analyzed <- str_split(
+      str_split(
+        contributions[id_analyzed], ': ')[[1]][2], ' ')[[1]]
+    analyzed <- gsub(analyzed, pattern = '\\.', replacement = '')
+    res$nr_analyzed <- length(analyzed)
+  }
   
   # Extract 'Wrote the paper'
   id_wrote <- grepl('wrote', contributions, ignore.case = TRUE)
-  wrote <- str_split(
-    str_split(
-      contributions[id_wrote], ': ')[[1]][2], ' ')[[1]]
-  wrote <- gsub(wrote, pattern = '\\.', replacement = '')
-  res$nr_wrote <- length(wrote)
-  
-  author <- NULL
-  
-  for (j in 1:length(abbreviated_author)){
-    step_1 <- sum(c(abbreviated_author[j] %in% conceived,
-                    abbreviated_author[j] %in% performed,
-                    abbreviated_author[j] %in% analyzed,
-                    abbreviated_author[j] %in% wrote))
-    if (step_1 > 0) {
-      author[j] <- TRUE
-    } else {
-      temp <- strsplit(conceived, '')
-      conc <- 0
-      for (z in 1:length(temp)){
-        conc <- conc + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
-                             abbreviated_author[j])
-      }
-      
-      temp <- strsplit(performed, '')
-      perf <- 0
-      for (z in 1:length(temp)){
-        perf <- perf + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
-                             abbreviated_author[j])
-      }
-      
-      temp <- strsplit(analyzed, '')
-      anal <- 0
-      for (z in 1:length(temp)){
-        anal <- anal + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
-                             abbreviated_author[j])
-      }
-      
-      temp <- strsplit(wrote, '')
-      wrot <- 0
-      for (z in 1:length(temp)){
-        wrot <- wrot + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
-                             abbreviated_author[j])
-      }
-      
-      if ((conc + perf + anal + wrot) > 0) author[j] <- TRUE else author[j] <- FALSE
-    }
+  if (sum(id_wrote) == 0){
+    res$nr_wrote <- NA
+  } else {
+    wrote <- str_split(
+      str_split(
+        contributions[id_wrote], ': ')[[1]][2], ' ')[[1]]
+    wrote <- gsub(wrote, pattern = '\\.', replacement = '')
+    res$nr_wrote <- length(wrote)
   }
   
-  res$first_author_present <- author[1]
-  res$ghost_authorship <- ifelse(sum(author == FALSE) > 0, TRUE, FALSE)
-  temp <- paste(grep('FALSE', author), collapse = ';') 
-  res$ghost_authorship_position <- ifelse(temp == '', NA, temp)
+  author_present <- NULL
+  author_conceived <- NULL
+  author_performed <- NULL
+  author_analyzed <- NULL
+  author_wrote <- NULL
+  
+  for (j in 1:length(abbreviated_author)){
+    
+    # Present at all
+    temp <- strsplit(uniq_initials, '')
+    at_all <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      at_all <- at_all + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                               abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    at_all <- at_all + sum(grepl(pattern = regex_patt,
+                                 uniq_initials))
+    
+    # Present in conceived
+    temp <- strsplit(conceived, '')
+    conc <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      conc <- conc + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                           abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    conc <- conc + sum(grepl(pattern = regex_patt,
+                             conceived))
+    
+    # Present in performed
+    temp <- strsplit(performed, '')
+    perf <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      perf <- perf + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                           abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    perf <- perf + sum(grepl(pattern = regex_patt,
+                             performed))
+    
+    # Present in analyzed
+    temp <- strsplit(analyzed, '')
+    anal <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      anal <- anal + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                           abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    anal <- anal + sum(grepl(pattern = regex_patt,
+                             analyzed))
+    
+    
+    # Present in wrote
+    temp <- strsplit(wrote, '')
+    wrot <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      wrot <- wrot + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                           abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    wrot <- wrot + sum(grepl(pattern = regex_patt,
+                             wrote))
+    
+    author_present[j] <- at_all
+    author_conceived[j] <- conc
+    author_performed[j] <- perf
+    author_analyzed[j] <- anal
+    author_wrote[j] <- wrot
+  }
+  
+  res$first_author_present <- author_present[1]
+  res$first_author_analyze <- author_analyzed[1]
+  res$ghost_authorship <- ifelse(sum(author_present == 0) > 0, TRUE, FALSE)
+  res$nr_ghost_authors <- sum(author_present == 0)
+  temp <- paste0(which(author_present == 0), '', collapse = ';')
+  res$ghost_authorship_position <- ifelse(temp == '',
+                                          NA,
+                                          temp)
   
   # Generate filename
   filename_meta <- sprintf('data/all_meta/%s',
@@ -262,85 +377,199 @@ for (iter in 1:5){
   # Split up contributions
   contributions <- str_split(res$author_notes, '\\. ')[[1]]
   
+  # Get initials for all contributions in a vector
+  separate <- unlist(str_split(contributions, ': '))
+  all_init <- separate[seq(2, length(separate), 2)]
+  all_init <- gsub(x = all_init, pattern = '\\.', replacement = '')
+  uniq_initials <- unique(unlist(str_split(all_init, pattern = ' ')))
+  
   # Extract "Conceived and Designed the experiments"
   id_conceived <- grepl('conceived', contributions, ignore.case = TRUE)
-  conceived <- str_split(
-    str_split(
-      contributions[id_conceived], ': ')[[1]][2], ' ')[[1]]
-  conceived <- gsub(conceived, pattern = '\\.', replacement = '')
-  res$nr_conceived <- length(conceived)
+  if (sum(id_conceived) == 0){
+    res$nr_conceived <- NA
+  } else {
+    conceived <- str_split(
+      str_split(
+        contributions[id_conceived], ': ')[[1]][2], ' ')[[1]]
+    conceived <- gsub(conceived, pattern = '\\.', replacement = '')
+    res$nr_conceived <- length(conceived)
+  }
   
   # Extract 'Performed the experiments'
   id_performed <- grepl('performed', contributions, ignore.case = TRUE)
-  performed <- str_split(
-    str_split(
-      contributions[id_performed], ': ')[[1]][2], ' ')[[1]]
-  performed <- gsub(performed, pattern = '\\.', replacement = '')
-  res$nr_performed <- length(performed)
+  if (sum(id_performed) == 0){
+    res$nr_performed <- NA
+  } else {
+    performed <- str_split(
+      str_split(
+        contributions[id_performed], ': ')[[1]][2], ' ')[[1]]
+    performed <- gsub(performed, pattern = '\\.', replacement = '')
+    res$nr_performed <- length(performed)
+  }
   
   # Extract 'Analyzed the data'
   id_analyzed <- grepl('analyzed', contributions, ignore.case = TRUE)
-  analyzed <- str_split(
-    str_split(
-      contributions[id_analyzed], ': ')[[1]][2], ' ')[[1]]
-  analyzed <- gsub(analyzed, pattern = '\\.', replacement = '')
-  res$nr_analyzed <- length(analyzed)
-  if (!is.null(res_statcheck)) res_statcheck$nr_analyzed <- length(analyzed)
+  if (sum(id_analyzed) == 0){
+    res$nr_analyzed <- NA
+  } else {
+    analyzed <- str_split(
+      str_split(
+        contributions[id_analyzed], ': ')[[1]][2], ' ')[[1]]
+    analyzed <- gsub(analyzed, pattern = '\\.', replacement = '')
+    res$nr_analyzed <- length(analyzed)
+  }
   
   # Extract 'Wrote the paper'
   id_wrote <- grepl('wrote', contributions, ignore.case = TRUE)
-  wrote <- str_split(
-    str_split(
-      contributions[id_wrote], ': ')[[1]][2], ' ')[[1]]
-  wrote <- gsub(wrote, pattern = '\\.', replacement = '')
-  res$nr_wrote <- length(wrote)
-  
-  author <- NULL
-  
-  for (j in 1:length(abbreviated_author)){
-    step_1 <- sum(c(abbreviated_author[j] %in% conceived,
-                    abbreviated_author[j] %in% performed,
-                    abbreviated_author[j] %in% analyzed,
-                    abbreviated_author[j] %in% wrote))
-    if (step_1 > 0) {
-      author[j] <- TRUE
-    } else {
-      temp <- strsplit(conceived, '')
-      conc <- 0
-      for (z in 1:length(temp)){
-        conc <- conc + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
-                             abbreviated_author[j])
-      }
-      
-      temp <- strsplit(performed, '')
-      perf <- 0
-      for (z in 1:length(temp)){
-        perf <- perf + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
-                             abbreviated_author[j])
-      }
-      
-      temp <- strsplit(analyzed, '')
-      anal <- 0
-      for (z in 1:length(temp)){
-        anal <- anal + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
-                             abbreviated_author[j])
-      }
-      
-      temp <- strsplit(wrote, '')
-      wrot <- 0
-      for (z in 1:length(temp)){
-        wrot <- wrot + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
-                             abbreviated_author[j])
-      }
-      
-      if ((conc + perf + anal + wrot) > 0) author[j] <- TRUE
-    }
+  if (sum(id_wrote) == 0){
+    res$nr_wrote <- NA
+  } else {
+    wrote <- str_split(
+      str_split(
+        contributions[id_wrote], ': ')[[1]][2], ' ')[[1]]
+    wrote <- gsub(wrote, pattern = '\\.', replacement = '')
+    res$nr_wrote <- length(wrote)
   }
   
-  res$first_author_present <- author[1]
-  res$ghost_authorship <- ifelse(sum(author == FALSE) > 0, TRUE, FALSE)
-  temp <- paste(grep('FALSE', author), collapse = ';') 
-  res$ghost_authorship_position <- ifelse(temp == '', NA, temp)
+  author_present <- NULL
+  author_conceived <- NULL
+  author_performed <- NULL
+  author_analyzed <- NULL
+  author_wrote <- NULL
+  
+  for (j in 1:length(abbreviated_author)){
+    
+    # Present at all
+    temp <- strsplit(uniq_initials, '')
+    at_all <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      at_all <- at_all + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                               abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    at_all <- at_all + sum(grepl(pattern = regex_patt,
+                                 uniq_initials))
+    
+    # Present in conceived
+    temp <- strsplit(conceived, '')
+    conc <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      conc <- conc + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                           abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    conc <- conc + sum(grepl(pattern = regex_patt,
+                             conceived))
+    
+    # Present in performed
+    temp <- strsplit(performed, '')
+    perf <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      perf <- perf + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                           abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    perf <- perf + sum(grepl(pattern = regex_patt,
+                             performed))
+    
+    # Present in analyzed
+    temp <- strsplit(analyzed, '')
+    anal <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      anal <- anal + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                           abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    anal <- anal + sum(grepl(pattern = regex_patt,
+                             analyzed))
+    
+    
+    # Present in wrote
+    temp <- strsplit(wrote, '')
+    wrot <- 0
+    
+    # In case the initials in contributions are < char than author
+    for (z in 1:length(temp)){
+      wrot <- wrot + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
+                           abbreviated_author[j])
+    }
+    
+    temp <- strsplit(abbreviated_author[j], '')
+    # In case the initials in contributions are < char than author
+    regex_patt <- sprintf('^(%s).*%s(%s)$',
+                          temp[[1]][1],
+                          ifelse(length(temp[[1]]) > 2,
+                                 paste0(temp[[1]][2:(length(temp[[1]]) - 1)],
+                                        '.*',
+                                        collapse = ''),
+                                 ''),
+                          tail(temp[[1]], 1))
+    wrot <- wrot + sum(grepl(pattern = regex_patt,
+                             wrote))
+    
+    author_present[j] <- at_all
+    author_conceived[j] <- conc
+    author_performed[j] <- perf
+    author_analyzed[j] <- anal
+    author_wrote[j] <- wrot
+  }
+  
+  res$first_author_present <- author_present[1]
+  res$first_author_analyze <- author_analyzed[1]
+  res$ghost_authorship <- ifelse(sum(author_present == 0) > 0, TRUE, FALSE)
+  res$nr_ghost_authors <- sum(author_present == 0)
+  temp <- paste0(which(author_present == 0), '', collapse = ';')
+  res$ghost_authorship_position <- ifelse(temp == '',
+                                          NA,
+                                          temp)
   
   # Generate filenames
   filename_meta <- sprintf('data/psych_meta/%s', gsub('/', '_', res$id))
