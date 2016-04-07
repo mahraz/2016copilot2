@@ -138,7 +138,22 @@ for (iter in 1:dim(res_raw)[1]){
         str_split(
           contributions[id_conceived], ': ')[[1]][2], ' ')[[1]]
       conceived <- gsub(conceived, pattern = '\\.', replacement = '')
-      res$nr_conceived <- length(conceived)
+      
+      # Ensure that double initials are checked and counted only once
+      # E.g., Shujun Wang and Sujin Wang
+      temp <- conceived[grepl(conceived, pattern = '[A-Z]{1}[a-z]{1,}')]
+      temp_conc <- NULL
+      
+      for (q in 1:(length(temp) / 2)){
+        from <- ifelse(q == 1, q, q + 1)
+        to <- ifelse(q == 1, 2, seq(2, length(temp), 2)[q])
+        temp_conc <- paste(temp[from:to], collapse = ' ')  
+        
+        sel <- grepl(conceived, pattern = '[A-Z]{1}[a-z]{1,}')
+        conceived[sel][from:to] <- temp_conc
+      }
+      
+      res$nr_conceived <- length(unique(conceived))
     }
     
     # Extract 'Performed the experiments'
@@ -150,10 +165,25 @@ for (iter in 1:dim(res_raw)[1]){
         str_split(
           contributions[id_performed], ': ')[[1]][2], ' ')[[1]]
       performed <- gsub(performed, pattern = '\\.', replacement = '')
-      res$nr_performed <- length(performed)
+      
+      # Ensure that double initials are checked and counted only once
+      # E.g., Shujun Wang and Sujin Wang
+      temp <- performed[grepl(performed, pattern = '[A-Z]{1}[a-z]{1,}')]
+      temp_perf <- NULL
+    
+      for (q in 1:(length(temp) / 2)){
+        from <- ifelse(q == 1, q, q + 1)
+        to <- ifelse(q == 1, 2, seq(2, length(temp), 2)[q])
+        temp_perf <- paste(temp[from:to], collapse = ' ')  
+        
+        sel <- grepl(performed, pattern = '[A-Z]{1}[a-z]{1,}')
+        performed[sel][from:to] <- temp_perf
+      }
+      
+      res$nr_performed <- length(unique(performed))
     }
     
-    # Extract 'Analyzed the data'
+    # Extract 'analyzed the data'
     id_analyzed <- grepl('analyzed', contributions, ignore.case = TRUE)
     if (sum(id_analyzed) == 0){
       res$nr_analyzed <- NA
@@ -162,7 +192,22 @@ for (iter in 1:dim(res_raw)[1]){
         str_split(
           contributions[id_analyzed], ': ')[[1]][2], ' ')[[1]]
       analyzed <- gsub(analyzed, pattern = '\\.', replacement = '')
-      res$nr_analyzed <- length(analyzed)
+      
+      # Ensure that double initials are checked and counted only once
+      # E.g., Shujun Wang and Sujin Wang
+      temp <- analyzed[grepl(analyzed, pattern = '[A-Z]{1}[a-z]{1,}')]
+      temp_anal <- NULL
+      
+      for (q in 1:(length(temp) / 2)){
+        from <- ifelse(q == 1, q, q + 1)
+        to <- ifelse(q == 1, 2, seq(2, length(temp), 2)[q])
+        temp_anal <- paste(temp[from:to], collapse = ' ')  
+        
+        sel <- grepl(analyzed, pattern = '[A-Z]{1}[a-z]{1,}')
+        analyzed[sel][from:to] <- temp_anal
+      }
+      
+      res$nr_analyzed <- length(unique(analyzed))
     }
     
     # Extract 'Wrote the paper'
@@ -174,7 +219,22 @@ for (iter in 1:dim(res_raw)[1]){
         str_split(
           contributions[id_wrote], ': ')[[1]][2], ' ')[[1]]
       wrote <- gsub(wrote, pattern = '\\.', replacement = '')
-      res$nr_wrote <- length(wrote)
+      
+      # Ensure that double initials are checked and counted only once
+      # E.g., Shujun Wang and Sujin Wang
+      temp <- wrote[grepl(wrote, pattern = '[A-Z]{1}[a-z]{1,}')]
+      temp_wrot <- NULL
+      
+      for (q in 1:(length(temp) / 2)){
+        from <- ifelse(q == 1, q, q + 1)
+        to <- ifelse(q == 1, 2, seq(2, length(temp), 2)[q])
+        temp_wrot <- paste(temp[from:to], collapse = ' ')  
+        
+        sel <- grepl(wrote, pattern = '[A-Z]{1}[a-z]{1,}')
+        wrote[sel][from:to] <- temp_wrot
+      }
+      
+      res$nr_wrote <- length(unique(wrote))
     }
     
     author_present <- NULL
