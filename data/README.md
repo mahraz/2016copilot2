@@ -1,7 +1,7 @@
 # Data
 
-The data folder is the folder that is destined to contain all the data. Some good practices are outlined below:
+Data were collected from the PLOS API with the package `rplos`. Considering the amount of data collected, we split up the initial data collection into separate files. These were conjoined into three data files with the following terminal commands (`pwd` for these commands = data folder).
 
-1. The very first raw datafile should *never* be deleted or edited. Make this file read-only to ensure this will not happen (on windows: right click -> properties -> tick "Read only" box; on mac: right click -> get info -> at the bottom, change to "Read only")
-2. Ensure that the data are accompanied by an appropriate codebook, if the datafile is not self-explanatory to an outsider.
-3. Ensure that the data is available to at least one co-author and that you have a back-up, to ensure data preservation
+1. all_meta.csv: `cat names_all.csv all_meta/* > all_meta.csv`
+2. psych_meta.csv: `cat names_psych.csv psych_meta/* > psych_meta.csv`
+3. psych_statcheck.csv: `cat names_statcheck.csv psych_statcheck/* > psych_statcheck.csv`
