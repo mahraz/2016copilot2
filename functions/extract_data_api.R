@@ -46,30 +46,34 @@ all_hits <- searchplos(q = search_all, fl = field_all, limit = 1)$meta$numFound
 psych_hits <- searchplos(q = search_psych, fl = field_psych, limit = 1)$meta$numFound
 
 size <- 100
-loops_all <- as.integer(all_hits / 10000 + ifelse(all_hits %% 10000 > 0, 1, 0))
+loops_all <- as.integer(all_hits / size + ifelse(all_hits %% size > 0, 1, 0))
 
-# for (i in 1:loops_all){
-for (i in 1:2){
+for (i in 1:loops_all){
+# for (i in 1:2){
   res <- searchplos(q = search_all, 
                     fl = field_all, 
-                    start = 1 + (i - 1) * 10000,
-                    limit = 10000)$data
+                    start = 1 + (i - 1) * size,
+                    limit = size)$data
   res$journal <- tolower(res$journal)
   write.csv(res, sprintf('data/all_raw/all_raw_%s.csv', i), row.names = FALSE)
+  
+  Sys.sleep(6)
 }
 
-loops_psych <- as.integer(psych_hits / 1000 + ifelse(psych_hits %% 1000 > 0, 1, 0))
+loops_psych <- as.integer(psych_hits / size + ifelse(psych_hits %% size > 0, 1, 0))
 
-# for (i in 1:loops_psych){
-for (i in 1:2){
+for (i in 1:loops_psych){
+# for (i in 1:2){
   res <- searchplos(q = search_psych, 
                     fl = field_psych, 
-                    start = 1 + (i - 1) * 1000,
-                    limit = 1000)$data
+                    start = 1 + (i - 1) * size,
+                    limit = size)$data
   res$journal <- tolower(res$journal)
   write.csv(res,
             file = sprintf('data/psych_raw/psych_raw_%s.csv', i),
             row.names = FALSE)
+  
+  Sys.sleep(6)
 }
 
 rm(res)
