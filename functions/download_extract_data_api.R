@@ -87,16 +87,18 @@ loops_psych <- as.integer(psych_hits / size_psych + ifelse(psych_hits %% size_ps
 regex_cap <- '[ÀÁÂÄÃÅÈÉÊËÌÍÎÏÒÓÔÖÕŁØÙÚÛÜŸÝÑßÇŒÆČŠŽ∂ðA-Z]'
 
 for (file_nr in 1:loops_all){
-  # for (file_nr in 1:1){
+  # for (file_nr in 37){
   res_raw <- read.csv(sprintf('data/all_raw/all_raw_%s.csv', file_nr))
   
   for (iter in 1:dim(res_raw)[1]){
-    # for (iter in 1:50){
+    # for (iter in 546){
     
     # Get information
     res <- res_raw[iter, ]
     # Ensure continuity of how dois are depicted
     res$id <- gsub('/', '_', res$id)
+    # Remove annoying chars in contribtuions
+    res$author_notes <- gsub('\\*', '', res$author_notes)
     
     # Retain only year of publication_date
     res$publication_year <- substr(res$publication_date, 0, 4)
@@ -141,7 +143,7 @@ for (file_nr in 1:loops_all){
     all_init <- gsub(x = all_init, pattern = '\\.', replacement = '')
     uniq_initials <- unique(unlist(str_split(all_init, pattern = ' ')))
     
-    if(sum(grepl(uniq_initials, pattern = '[a-z]')) > 0 |
+    if(sum(grepl(uniq_initials, pattern = '[()a-z]')) > 0 |
        is.null(separate) |
        length(uniq_initials) == 0){
       
@@ -472,17 +474,14 @@ for (file_nr in 1:loops_psych){
     
     # Ensure continuity of how dois are depicted
     res$id <- gsub('/', '_', res$id)
+    # Remove annoying chars in contribtuions
+    res$author_notes <- gsub('\\*', '', res$author_notes)
     
     full_text <- res$everything
     res <- res[, 1:(dim(res)[2] - 1)]
     
     # Run statcheck on fulltext
-    res_statcheck <- tryCatch(statcheck(full_text, OneTailedTests = TRUE), error = function(e) NULL)
-    
-    if(!is.null(res_statcheck)){
-      sel <- res_statcheck$OneTail == TRUE & res_statcheck$OneTailedInTxt == TRUE
-      res_statcheck$DecisionError[sel] <- FALSE
-    }
+    res_statcheck <- tryCatch(statcheck(full_text, OneTailedTxt = TRUE), error = function(e) NULL)
     
     # Add meta information about statcheck results
     res$nr_pval <- ifelse(is.null(res_statcheck),
@@ -559,7 +558,7 @@ for (file_nr in 1:loops_psych){
     all_init <- gsub(x = all_init, pattern = '\\.', replacement = '')
     uniq_initials <- unique(unlist(str_split(all_init, pattern = ' ')))
     
-    if(sum(grepl(uniq_initials, pattern = '[a-z]')) > 0 |
+    if(sum(grepl(uniq_initials, pattern = '[()a-z]')) > 0 |
        is.null(separate) |
        length(uniq_initials) == 0){
       
