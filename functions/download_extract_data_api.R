@@ -478,6 +478,8 @@ for (file_nr in 1:loops_psych){
     res$author_notes <- gsub('\\*', '', res$author_notes)
     
     full_text <- res$everything
+    # Remove trailing whitespaces
+    full_text <- gsub(' ', ' ', full_text)
     res <- res[, 1:(dim(res)[2] - 1)]
     
     # Run statcheck on fulltext
