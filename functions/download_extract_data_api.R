@@ -100,9 +100,9 @@ for (file_nr in 1:loops_all){
     # Remove annoying chars in contribtuions
     res$author_notes <- gsub('\\*', '', res$author_notes)
     # Make sure that all quotation marks are gone, to prevent problems in csv
-    res$author_affiliate <- gsub(res$author_affiliate, '["\']', 2)
-    res$author_notes <- gsub(res$author_notes, '["\']', 2)
-    res$competing_interest <- gsub(res$competing_interest, '["\']', 2)
+    res$author_affiliate <- gsub(x = res$author_affiliate, pattern = '["\'‘’„“”]', replacement = '')
+    res$author_notes <- gsub(x = res$author_notes, pattern = '["\'‘’„“”]', replacement = '')
+    res$competing_interest <- gsub(x = res$competing_interest, pattern = '["\'‘’„“”]', replacement = '')
     
     # Retain only year of publication_date
     res$publication_year <- substr(res$publication_date, 0, 4)
@@ -481,9 +481,9 @@ for (file_nr in 1:loops_psych){
     # Remove annoying chars in contribtuions
     res$author_notes <- gsub('\\*', '', res$author_notes)
     # Make sure that all quotation marks are gone, to prevent problems in csv
-    res$author_affiliate <- gsub(res$author_affiliate, '["\']', 2)
-    res$author_notes <- gsub(res$author_notes, '["\']', 2)
-    res$competing_interest <- gsub(res$competing_interest, '["\']', 2)
+    res$author_affiliate <- gsub(x = res$author_affiliate, pattern = '["\'‘’„“”]', replacement = '')
+    res$author_notes <- gsub(x = res$author_notes, pattern = '["\'‘’„“”]', replacement = '')
+    res$competing_interest <- gsub(x = res$competing_interest, pattern = '["\'‘’„“”]', replacement = '')
     
     full_text <- res$everything
     # Remove trailing whitespaces
