@@ -97,6 +97,31 @@ for (file_nr in 1:loops_all){
     res <- res_raw[iter, ]
     # Ensure continuity of how dois are depicted
     res$id <- gsub('/', '_', res$id)
+    # Ensure journal is not none if possible
+    if (res$journal == 'none')
+    {
+      res$journal <- ifelse(grepl(x = res$id,
+                                  pattern = 'pone'),
+                            'plos one',
+                            ifelse(grepl(x = res$id,
+                                         pattern = 'pbio'), 
+                                   'plos biology',
+                                   ifelse(grepl(x = res$id,
+                                                pattern = 'pcbi'),
+                                          'plos computational biology',
+                                          ifelse(grepl(x = res$id,
+                                                       pattern = 'pgen'),
+                                                 'plos genetics',
+                                                 ifelse(grepl(x = res$id,
+                                                              pattern = 'pmed'),
+                                                        'plos medicine',
+                                                        ifelse(grepl(x = res$id,
+                                                                     pattern = 'pntd'), 
+                                                               'plos neglected tropical diseases',
+                                                               'none'))))))
+      
+    }
+    
     # Remove annoying chars in contribtuions
     res$author_notes <- gsub('\\*', '', res$author_notes)
     # Make sure that all quotation marks are gone, to prevent problems in csv
@@ -465,11 +490,11 @@ write.table(t(as.matrix(names(res))),
 # Collect psychology results ----------------------------------------------
 
 for (file_nr in 1:loops_psych){
-# for (file_nr in 1:1){
+  # for (file_nr in 1:1){
   res_raw <- read.csv(sprintf('data/psych_raw/psych_raw_%s.csv', file_nr))
   
   for (iter in 1:dim(res_raw)[1]){
-  # for (iter in 1:50){
+    # for (iter in 1:50){
     # Ensure res_statcheck is cleaned
     res_statcheck <- NULL
     
@@ -478,6 +503,30 @@ for (file_nr in 1:loops_psych){
     
     # Ensure continuity of how dois are depicted
     res$id <- gsub('/', '_', res$id)
+    # Ensure journal is not none if possible
+    if (res$journal == 'none')
+    {
+      res$journal <- ifelse(grepl(x = res$id,
+                                  pattern = 'pone'),
+                            'plos one',
+                            ifelse(grepl(x = res$id,
+                                         pattern = 'pbio'), 
+                                   'plos biology',
+                                   ifelse(grepl(x = res$id,
+                                                pattern = 'pcbi'),
+                                          'plos computational biology',
+                                          ifelse(grepl(x = res$id,
+                                                       pattern = 'pgen'),
+                                                 'plos genetics',
+                                                 ifelse(grepl(x = res$id,
+                                                              pattern = 'pmed'),
+                                                        'plos medicine',
+                                                        ifelse(grepl(x = res$id,
+                                                                     pattern = 'pntd'), 
+                                                               'plos neglected tropical diseases',
+                                                               'none'))))))
+      
+    }
     # Remove annoying chars in contribtuions
     res$author_notes <- gsub('\\*', '', res$author_notes)
     # Make sure that all quotation marks are gone, to prevent problems in csv
@@ -901,6 +950,8 @@ for (file_nr in 1:loops_psych){
                 row.names = FALSE)  
     ## Statcheck
     if(!is.null(res_statcheck)){
+      
+      res_statcheck <- res_statcheck[,-which(names(res_statcheck) == 'APAfactor')]
       write.table(x = res_statcheck,
                   col.names = FALSE,
                   sep = ',',
