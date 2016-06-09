@@ -527,7 +527,10 @@ for (file_nr in 1:loops_psych){
                                                         ifelse(grepl(x = res$id,
                                                                      pattern = 'pntd'), 
                                                                'plos neglected tropical diseases',
-                                                               'none'))))))
+                                                               ifelse(grepl(x = res$id,
+                                                                            pattern = 'ppat'),
+                                                                      'plos pathogens',
+                                                                      'none')))))))
       
     }
     # Remove annoying chars in contribtuions
