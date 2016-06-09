@@ -118,7 +118,10 @@ for (file_nr in 1:loops_all){
                                                         ifelse(grepl(x = res$id,
                                                                      pattern = 'pntd'), 
                                                                'plos neglected tropical diseases',
-                                                               'none'))))))
+                                                               ifelse(grepl(x = res$id,
+                                                                            pattern = 'ppat'),
+                                                                      'plos pathogens',
+                                                                      'none')))))))
       
     }
     
