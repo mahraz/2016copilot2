@@ -543,6 +543,7 @@ for (file_nr in 1:loops_psych){
     full_text <- res$everything
     # Remove trailing whitespaces
     full_text <- gsub(' ', ' ', full_text)
+    # Remove the text from res object
     res <- res[, 1:(dim(res)[2] - 1)]
     
     # Run statcheck on fulltext
@@ -588,7 +589,8 @@ for (file_nr in 1:loops_psych){
                                              pattern = 'no competing interest')
     
     # add vars to res_statcheck
-    if (!is.null(res_statcheck)){
+    if (!is.null(res_statcheck))
+    {
       
       # Ensure source is the doi
       res_statcheck$Source <- gsub('/', '_', res$id)
@@ -614,9 +616,11 @@ for (file_nr in 1:loops_psych){
     
     # Get initials for all contributions in a vector
     separate <- unlist(str_split(contributions, ': '))
-    if (!length(separate) > 1){
+    if (!length(separate) > 1)
+    {
       index <- 1
-    } else {
+    } else 
+    {
       index <- seq(2, length(separate), 2)
     }
     all_init <- separate[index]
@@ -625,7 +629,8 @@ for (file_nr in 1:loops_psych){
     
     if(sum(grepl(uniq_initials, pattern = '[()a-z]')) > 0 |
        is.null(separate) |
-       length(uniq_initials) == 0){
+       length(uniq_initials) == 0)
+    {
       
       res$nr_conceived <- NA
       res$nr_performed <- NA
