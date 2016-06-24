@@ -1,0 +1,90 @@
+"10.1371_journal.pone.0012253","plos one","2010-08-26T00:00:00Z","Carsten Friis; Trudy M Wassenaar; Muhammad A Javed; Lars Snipen; Karin Lagesen; Peter F Hallin; Diane G Newell; Monique Toszeghy; Anne Ridley; Georgina Manning; David W Ussery","Department of Systems Biology, The Technical University of Denmark, Lyngby, Denmark; Molecular Microbiology and Genomics Consultants, Zotzenheim, Germany; School of Science and Technology, Nottingham Trent University, Nottingham, United Kingdom; Department of Chemistry, Biotechnology and Food Sciences, Norwegian University of Life Sciences, Ås, Norway; Institute of Medical Microbiology, Oslo University Hospital, Oslo, Norway; Department of Informatics, University of Oslo, Oslo, Norway; Veterinary Laboratories Agencies, Addlestone, United Kingdom; Food-borne Zoonoses Consultancy, Andover, United Kingdom","Conceived and designed the experiments: CF TMW DGN DWU. Performed the experiments: CF MAJ MT AR GM. Analyzed the data: CF TMW LS KL PFH. Contributed reagents/materials/analysis tools: MT AR GM. Wrote the paper: CF TMW DGN DWU. The primary author of the paper and the primary person responsible for driving the computational work from start to finish: CF. The primary behind all computational aspects of the work, including the genome annotation of M1: CF. Has been instrumental in maintaining the link between the computational work and the experimental work: TMW. Lent her experience to all aspects of the project and has contributed significantly at all stages writing and proof reading of the manuscript: TMW. Helped with the analysis of genome sequence of M1, designed and synthesized primers to fill the gaps between contigs of the M1 genome: MAJ. Did the amplicons generation and sequencing followed by the analysis: MAJ. Helped with the preparation of the manuscript: MAJ. Did the computations related to the pan-genome tree and the estimates of the population core- and pan-genome sizes, and contributed to the corresponding parts of the manuscript: LS. Developed a phylogenetic tree for these genomes based on predicted 16S rRNA sequences: KL. Contributed text to the paper and participated in the final proof reading of the article: KL. Offered assistance in adopting his previously established atlas methods into this project: PFH. Contributed particularly to the supplementary section by setting up the interactive figures included there: PFH. Participated in the proof reading of the manuscript: PFH. Managed the research team throughout the period of the strains isolation, identification and characterization providing expertise and leadership to recognize the importance of this strain for future research: DGN. Instigated the idea of sequencing the strain and collaborated with DWU and TMW to get this done: DGN. Contributed significantly to the drafting of the manuscript by providing expert knowledge, intellectual content and experience: DGN. Was solely responsible for acquiring the M1 - she is the person who was infected: MT. Recovered the strains from herself and the appropriate chickens: MT. Purified, stored and initially characterized the strains: MT. Was responsible for the molecular characterization of the human and chickens strains including the molecular typing - demonstrating that they were identical: AR GM. Prepared, quality controlled and provided the strain DNA for sequencing: AR. Contributed to the drafting and approval of the final manuscript: MT AR. Was involved in the research carried out on M1 since its first isolation at the VLA; was specifically responsible for the molecular typing of this strain by MLST as well as overseeing the invasion and toxin studies: GM. The closing of the gaps was funded by research money that was awarded to her at NTU and she oversaw that work: GM. Contributed to previous drafts of the paper and the final proof reading of the article: GM. Conceptualized much of the work, especially the computational aspects: DWU. Managed the bioinformatic research team and has provided considerable feedback and ideas: DWU. Contributed text and assisted in proof reading of the manuscript: DWU.10.1371/journal.pone.0012253.t002Table 2
+Campylobacter Genomes included in this study. Species Name
+Project ID
+Contigs
+Accession
+Reference C. jejuni M1
+38041
+1
+CP001900
+This Study C. jejuni 260.94
+16229
+10
+AANK01000000
+- C. jejuni 81116
+17953
+1
+CP000814.1
+[16] C. jejuni 81-176A
+16135
+3
+CP000538.1, CP000549.1, CP000550.1
+[48] C. jejuni 81-176B
+17341
+1
+NZ_AASL00000000
+[46] C. jejuni 84–25
+16367
+5
+AANT02000000
+- C. jejuni CF93-6
+16265
+14
+AANJ01000001
+[77] C. jejuni CG8421
+21037
+20
+ABGQ01000000
+[78] C. jejuni CG8486
+17055
+19
+AASY01000000
+[18] C. jejuni doylei 269.97
+17163
+1
+CP000768.1
+- C. jejuni HB93-13
+16267
+35
+AANQ0100000
+- C. jejuni NCTC 11168
+8
+1
+AL111168.1
+[13] C. jejuni RM1221
+303
+1
+CP000025.1
+[19] C. coli RM2228
+12516
+38
+AAFL01000000
+[19] C. concisus 13826
+17159
+3
+CP000792.1, CP000793.1, CP000794.1
+- C. curvus 525.92
+17161
+1
+CP000767.1
+- C. fetus 82–40
+16293
+1
+CP000487.1
+- C. hominis ATCC BAA-381
+20083
+2
+CP000775.1, CP000776.1
+- C. lari RM2100
+12517
+2
+CP000932.1, CP000933.1
+[79] C. rectus RM3267
+31017
+89
+ACFU01000000
+- C. upsaliensis RM3195
+12518
+20
+AAFJ01000000
+[19] If the genome project listed any plasmids, these were included in the number of contigs and their accession numbers are included.For genomes represented by multiple contigs the published sequence may still be incomplete.","The authors have no conflicts or competing interests, but to clarify the involvment of the companies of Professor Newell and Dr. Wassenaar they here present statements from both parties declaring their interests. These statements can be provided with signatures if requested. Until 2008 Dr Diane G Newell was employed by the Veterinary Laboratories Agency (VLA). Following her retirement from the VLA she became the sole owner of Foodborne Zoonoses Consultancy, which provides advice to UK and EC governmental bodies. In her capacity as an employee of the VLA she initiated, participated in, supervised and managed the research associated with the isolation and characterization of strain M1 and the delivery of the DNA for the genomic analysis. Subsequently, Dr Newell, of Foodborne Zoonoses Consultancy, was contracted by the VLA to provide the time and expertise to collaborate in the interpretation of the genomic data and publication of the results of this research. There are no conflicts of, or competing, interests associated with this employment. All PLoS ONE policies regarding the sharing of results or data will be complied with. Since 2000, Dr. Trudy M. Wassenaar is founder and owner of Molecular Microbiology and Genomics Consultants (MMGC), which provides advice to academic, governmental and commercial research groups working on bacterial molecular biology or genomics. Through this company, Dr. Wassenaar provided insights and expertise in the analysis and interpretation of the M1 genome. The time invested in this work was paid in part by The Technical University of Denmark and in part by MMGC but no other financial input was rendered. There is no commercial interest of MMGC to any of the findings disclosed in the manuscript. There are no conflicts of, or competing, interests associated with MMGC. All PLoS ONE policies regarding the sharing of results or data will be complied with.","2010","08","Carsten Friis","CF",11,TRUE,4,5,5,4,TRUE,TRUE,FALSE,0,NA,FALSE
