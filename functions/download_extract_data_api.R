@@ -86,6 +86,8 @@ loops_psych <- as.integer(psych_hits / size_psych + ifelse(psych_hits %% size_ps
 
 regex_cap <- '[ÀÁÂÄÃÅÈÉÊËÌÍÎÏÒÓÔÖÕŁØÙÚÛÜŸÝÑßÇŒÆČŠŽ∂ðA-Z]'
 
+loops_all <- length(list.files('data/all_raw'))
+
 for (file_nr in 1:loops_all){
   # for (file_nr in 37){
   res_raw <- read.csv(sprintf('data/all_raw/all_raw_%s.csv', file_nr))
@@ -491,6 +493,8 @@ write.table(t(as.matrix(names(res))),
             col.names = FALSE)
 
 # Collect psychology results ----------------------------------------------
+
+loops_psych <- length(list.files('data/psych_raw'))
 
 for (file_nr in 1:loops_psych){
   # for (file_nr in 1:1){
