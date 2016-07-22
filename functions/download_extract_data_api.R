@@ -4,9 +4,11 @@ if(!require(statcheck)){install.packages('statcheck')}
 if(!require(stringr)){install.packages('stringr')}
 
 # function to make first letter of each word uppercase
-simpleCap <- function(x) {
+simpleCap <- function(x) 
+{
   res <- NULL
-  for (i in 1:length(x)){
+  for (i in 1:length(x))
+  {
     s <- strsplit(x[i], " ")[[1]]
     
     res[i] <- paste(toupper(substring(s, 1, 1)), substring(s, 2),
@@ -88,11 +90,12 @@ regex_cap <- '[ÀÁÂÄÃÅÈÉÊËÌÍÎÏÒÓÔÖÕŁØÙÚÛÜŸÝÑßÇŒÆ�
 
 loops_all <- length(list.files('data/all_raw'))
 
-for (file_nr in 1:loops_all){
-  # for (file_nr in 37){
-  res_raw <- read.csv(sprintf('data/all_raw/all_raw_%s.csv', file_nr))
+for (file_nr in 1:loops_all)
+{
+  res_raw <- read.csv(sprintf('data/all_raw/all_raw_%s.csv', file_nr), stringsAsFactors = FALSE)
   
-  for (iter in 1:dim(res_raw)[1]){
+  for (iter in 1:dim(res_raw)[1])
+  {
     # for (iter in 546){
     
     # Get information
@@ -149,7 +152,8 @@ for (file_nr in 1:loops_all){
     
     # Get all author initials
     temp <- str_extract_all(simpleCap(str_split(res$author, '; ')[[1]]), regex_cap)
-    for (i in 1:length(temp)){
+    for (i in 1:length(temp))
+    {
       temp[[i]] <- paste(unlist(temp[[i]], regex_cap), collapse = '')
     }
     abbreviated_author <- unlist(temp)
@@ -168,9 +172,11 @@ for (file_nr in 1:loops_all){
     
     # Get initials for all contributions in a vector
     separate <- unlist(str_split(contributions, ': '))
-    if (!length(separate) > 1){
+    if (!length(separate) > 1)
+    {
       index <- 1
-    } else {
+    } else 
+    {
       index <- seq(2, length(separate), 2)
     }
     all_init <- separate[index]
@@ -179,7 +185,8 @@ for (file_nr in 1:loops_all){
     
     if(sum(grepl(uniq_initials, pattern = '[()a-z]')) > 0 |
        is.null(separate) |
-       length(uniq_initials) == 0){
+       length(uniq_initials) == 0)
+    {
       
       res$nr_conceived <- NA
       res$nr_performed <- NA
@@ -191,13 +198,16 @@ for (file_nr in 1:loops_all){
       res$nr_ghost_authors <- NA
       res$ghost_authorship_position <- NA
       
-    } else {
+    } else 
+    {
       
       # Extract "Conceived and Designed the experiments"
       id_conceived <- grepl('conceived', contributions, ignore.case = TRUE)
-      if (sum(id_conceived) == 0){
+      if (sum(id_conceived) == 0)
+      {
         res$nr_conceived <- NA
-      } else {
+      } else 
+      {
         conceived <- str_split(
           str_split(
             contributions[id_conceived], ': ')[[1]][2], ' ')[[1]]
@@ -208,8 +218,10 @@ for (file_nr in 1:loops_all){
         temp <- conceived[grepl(conceived, pattern = '[A-Z]{1}[a-z]{1,}')]
         temp_conc <- NULL
         
-        if (!length(temp) == 0){
-          for (q in 1:(length(temp) / 2)){
+        if (!length(temp) == 0)
+        {
+          for (q in 1:(length(temp) / 2))
+          {
             from <- ifelse(q == 1, q, q + 1)
             to <- ifelse(q == 1, 2, seq(2, length(temp), 2)[q])
             temp_conc <- paste(temp[from:to], collapse = ' ')  
@@ -224,9 +236,11 @@ for (file_nr in 1:loops_all){
       
       # Extract 'Performed the experiments'
       id_performed <- grepl('performed', contributions, ignore.case = TRUE)
-      if (sum(id_performed) == 0){
+      if (sum(id_performed) == 0)
+      {
         res$nr_performed <- NA
-      } else {
+      } else 
+      {
         performed <- str_split(
           str_split(
             contributions[id_performed], ': ')[[1]][2], ' ')[[1]]
@@ -237,8 +251,10 @@ for (file_nr in 1:loops_all){
         temp <- performed[grepl(performed, pattern = '[A-Z]{1}[a-z]{1,}')]
         temp_perf <- NULL
         
-        if (!length(temp) == 0){
-          for (q in 1:(length(temp) / 2)){
+        if (!length(temp) == 0)
+        {
+          for (q in 1:(length(temp) / 2))
+          {
             from <- ifelse(q == 1, q, q + 1)
             to <- ifelse(q == 1, 2, seq(2, length(temp), 2)[q])
             temp_perf <- paste(temp[from:to], collapse = ' ')  
@@ -253,9 +269,11 @@ for (file_nr in 1:loops_all){
       
       # Extract 'analyzed the data'
       id_analyzed <- grepl('analyzed', contributions, ignore.case = TRUE)
-      if (sum(id_analyzed) == 0){
+      if (sum(id_analyzed) == 0)
+      {
         res$nr_analyzed <- NA
-      } else {
+      } else 
+      {
         analyzed <- str_split(
           str_split(
             contributions[id_analyzed], ': ')[[1]][2], ' ')[[1]]
@@ -266,8 +284,10 @@ for (file_nr in 1:loops_all){
         temp <- analyzed[grepl(analyzed, pattern = '[A-Z]{1}[a-z]{1,}')]
         temp_anal <- NULL
         
-        if (!length(temp) == 0){
-          for (q in 1:(length(temp) / 2)){
+        if (!length(temp) == 0)
+        {
+          for (q in 1:(length(temp) / 2))
+          {
             from <- ifelse(q == 1, q, q + 1)
             to <- ifelse(q == 1, 2, seq(2, length(temp), 2)[q])
             temp_anal <- paste(temp[from:to], collapse = ' ')  
@@ -281,9 +301,11 @@ for (file_nr in 1:loops_all){
       
       # Extract 'Wrote the paper'
       id_wrote <- grepl('wrote', contributions, ignore.case = TRUE)
-      if (sum(id_wrote) == 0){
+      if (sum(id_wrote) == 0)
+      {
         res$nr_wrote <- NA
-      } else {
+      } else 
+      {
         wrote <- str_split(
           str_split(
             contributions[id_wrote], ': ')[[1]][2], ' ')[[1]]
@@ -294,8 +316,10 @@ for (file_nr in 1:loops_all){
         temp <- wrote[grepl(wrote, pattern = '[A-Z]{1}[a-z]{1,}')]
         temp_wrot <- NULL
         
-        if (!length(temp) == 0){
-          for (q in 1:(length(temp) / 2)){
+        if (!length(temp) == 0)
+        {
+          for (q in 1:(length(temp) / 2))
+          {
             from <- ifelse(q == 1, q, q + 1)
             to <- ifelse(q == 1, 2, seq(2, length(temp), 2)[q])
             temp_wrot <- paste(temp[from:to], collapse = ' ')  
@@ -313,14 +337,16 @@ for (file_nr in 1:loops_all){
       author_analyzed <- NULL
       author_wrote <- NULL
       
-      for (j in 1:length(abbreviated_author)){
+      for (j in 1:length(abbreviated_author))
+      {
         
         # Present at all
         temp <- strsplit(uniq_initials, '')
         at_all <- 0
         
         # In case the initials in contributions are < char than author
-        for (z in 1:length(temp)){
+        for (z in 1:length(temp))
+        {
           at_all <- at_all + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
                                    abbreviated_author[j])
         }
@@ -343,7 +369,8 @@ for (file_nr in 1:loops_all){
         conc <- 0
         
         # In case the initials in contributions are < char than author
-        for (z in 1:length(temp)){
+        for (z in 1:length(temp))
+        {
           conc <- conc + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
                                abbreviated_author[j])
         }
@@ -366,7 +393,8 @@ for (file_nr in 1:loops_all){
         perf <- 0
         
         # In case the initials in contributions are < char than author
-        for (z in 1:length(temp)){
+        for (z in 1:length(temp))
+        {
           perf <- perf + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
                                abbreviated_author[j])
         }
@@ -389,7 +417,8 @@ for (file_nr in 1:loops_all){
         anal <- 0
         
         # In case the initials in contributions are < char than author
-        for (z in 1:length(temp)){
+        for (z in 1:length(temp))
+        {
           anal <- anal + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
                                abbreviated_author[j])
         }
@@ -413,7 +442,8 @@ for (file_nr in 1:loops_all){
         wrot <- 0
         
         # In case the initials in contributions are < char than author
-        for (z in 1:length(temp)){
+        for (z in 1:length(temp))
+        {
           wrot <- wrot + grepl(pattern = paste0(temp[[z]], '.*', collapse = ''),
                                abbreviated_author[j])
         }
@@ -441,13 +471,15 @@ for (file_nr in 1:loops_all){
       if (is.na(res$nr_conceived) &
           is.na(res$nr_performed) & 
           is.na(res$nr_analyzed) &
-          is.na(res$nr_wrote)){
+          is.na(res$nr_wrote))
+      {
         res$first_author_present <- NA
         res$first_author_analyze <- NA
         res$ghost_authorship <- NA
         res$nr_ghost_authors <- NA
         res$ghost_authorship_position <- NA
-      } else {
+      } else 
+      {
         res$first_author_present <- ifelse(author_present[1] > 0, TRUE, FALSE)
         res$first_author_analyze <- ifelse(author_analyzed[1] > 0, TRUE, FALSE)
         res$ghost_authorship <- ifelse(sum(author_present == 0) > 0, TRUE, FALSE)
@@ -469,7 +501,8 @@ for (file_nr in 1:loops_all){
       check[4] <- ifelse(res$nr_ghost_authors > 1,
                          TRUE, FALSE)
       if (sum(check, na.rm = TRUE) > 0) res$check <- TRUE else res$check <- FALSE
-      
+    }
+    
       # Generate filename
       filename_meta <- sprintf('data/all_meta/%s',
                                gsub('/',
@@ -482,7 +515,6 @@ for (file_nr in 1:loops_all){
                   sep = ',',
                   file = filename_meta,
                   row.names = FALSE)  
-    }
   }
 }
 # save the column names for the data later
@@ -498,7 +530,7 @@ loops_psych <- length(list.files('data/psych_raw'))
 
 for (file_nr in 1:loops_psych){
   # for (file_nr in 1:1){
-  res_raw <- read.csv(sprintf('data/psych_raw/psych_raw_%s.csv', file_nr))
+  res_raw <- read.csv(sprintf('data/psych_raw/psych_raw_%s.csv', file_nr), stringsAsFactors = FALSE)
   
   for (iter in 1:dim(res_raw)[1]){
     # for (iter in 1:50){
